@@ -3,12 +3,16 @@ import Message from './Message.jsx';
 
 class MessageList extends Component {
   render() {
+    
+// change here to render new message from the chatBar, not chattyDefaultApp
     return (
       <main className="messages">
         {
-          this.props.messages.map((chattyData, key) => 
+          this.props.messages.map((chattyData) => 
           <Message 
-          key= {key} 
+          // change this to id
+          key= {chattyData.id} 
+
           chattyAppUsername= {chattyData.username} 
           chattyAppMessage={chattyData.content} 
           />)
