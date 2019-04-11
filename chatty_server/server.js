@@ -5,7 +5,6 @@ const uuidv4 = require('uuid');
 // Set the port to 3001
 const PORT = 3001;
 
-
 const server = express()
   .use(express.static('public'))
   .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on port ${ PORT }`));
@@ -36,22 +35,12 @@ wss.broadcast = function broadcast(data) {
     })
 }
 
-// Set up a callback that will run when a client connects to the server
-// When a client connects they are assigned a socket, represented by
-// the ws parameter in the callback.
 wss.on('connection', (ws) => {
+
   console.log('Client connected');
-//   ws.on('message', (message) => {
-//     const inputMessage = JSON.parse(message);
-//     const wsMessageObj = {
-//         id: inputMessage.id,
-//         username: inputMessage.username,
-//         content: inputMessage.content
-//     }
-//     wss.broadcast(JSON.stringify(wsMessageObj))
-// });
 
   ws.on('message', (messageObj) => {
+
     const parsedMsg = JSON.parse(messageObj);
     console.log('received message:', parsedMsg);
     parsedMsg.id = uuidv4();
@@ -60,6 +49,5 @@ wss.on('connection', (ws) => {
 
   });
   
-
   ws.on('close', () => console.log('Client disconnected'));
 });
