@@ -2,31 +2,35 @@ import React, {Component} from 'react';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 
-const chattyDefaultData = {
-  currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
-  messages: [
-    {
-      id: 0,
-      username: 'Bob',
-      content: 'Has anyone seen my marbles?'
-    },
-    { 
-      id: 1,
-      username: 'Anonymous',
-      content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
-    }
-  ]
-}
 
 class App extends Component {
   constructor(props) {
     super(props);
-
-    this.state = chattyDefaultData;
-
-
-
+    this.state = {
+      currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
+      messages: [
+        {
+          id: 0,
+          username: 'Bob',
+          content: 'Has anyone seen my marbles?'
+        },
+        { 
+          id: 1,
+          username: 'Anonymous',
+          content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
+        }
+      ]
+    }
   }
+
+  handleOnOpen = evt => {
+    console.log('connected to websocket server');
+  }
+
+  handleOnError = evt => {
+    console.log('Uh Oh ... something happened, please reconnect!');
+  }
+
   componentDidMount() {
     const socketUrl = 'ws://localhost:3001'
     
@@ -34,17 +38,28 @@ class App extends Component {
     this.socket.onopen = this.handleOnOpen;
     this.socket.onmessage= this.handleOnMessage;
     this.socket.onerror = this.handleOnError;
-    
+ 
   }
-  // function i call when the messages are submitted. Create object like newmessage, add to state.
+
+  // sending message from CLIENT to SERVER
+  handleOnMessage = message => {
+  
+    console.log('freaking message sent', message);
+    const parsedReceivedMsg = JSON.parse(message.data)
+    this.setState({messages:[...this.state.messages, parsedReceivedMsg]})
+
+  }
+
+  // function  call when the messages are submitted. Create object  newMessage, add to state.
   handleInsertMessage = (content, username) => {
     const newMessage = {
       id: this.state.messages.length + 1,
-      username: username,
+      username: this.state.currentUser.name,
       content: content
     };
-    this.setState({messages:[...this.state.messages, newMessage]})
-    }
+    this.socket.send(JSON.stringify(newMessage))
+  }
+  
   render() {
     return (
       <div>
