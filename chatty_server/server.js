@@ -1,24 +1,63 @@
 const express = require('express');
 const SocketServer = require('ws').Server;
+const uuidv4 = require('uuid');
 
 // Set the port to 3001
 const PORT = 3001;
 
-// Create a new express server
+
 const server = express()
-   // Make the express server serve static assets (html, javascript, css) from the /public folder
   .use(express.static('public'))
   .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on port ${ PORT }`));
 
-// Create the WebSockets server
+
 const wss = new SocketServer({ server });
+
+// const connectUser = (username, usernameList) => {
+//     const usernameId = uuidv4();
+
+//     const inputMsg = {
+//         id: usernameId,
+//         username: ``
+//     }
+// }
+
+// add client here -------------------------
+// const addClient = (client, clientInfo) => {
+//     clientList[clientInfo.id] = {
+//         id: 
+//     }
+// }
+// ---------------------------------
+
+wss.broadcast = function broadcast(data) {
+    wss.clients.forEach(function each(client) {
+        client.send(data)
+    })
+}
 
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected');
+//   ws.on('message', (message) => {
+//     const inputMessage = JSON.parse(message);
+//     const wsMessageObj = {
+//         id: inputMessage.id,
+//         username: inputMessage.username,
+//         content: inputMessage.content
+//     }
+//     wss.broadcast(JSON.stringify(wsMessageObj))
+// });
 
-  // Set up a callback for when a client closes the socket. This usually means they closed their browser.
+  ws.on('message', (messageObj) => {
+    const parsedMsg = JSON.parse(messageObj);
+    console.log('received message:', parsedMsg);
+    wss.broadcast(JSON.stringify(parsedMsg))
+
+  });
+  
+
   ws.on('close', () => console.log('Client disconnected'));
 });
