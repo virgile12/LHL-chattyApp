@@ -9,10 +9,15 @@ const server = express()
   .use(express.static('public'))
   .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on port ${ PORT }`));
 
-
 const wss = new SocketServer({ server });
 
 const clientListNb = {counter: 0};
+
+const getColor = () => {
+  return `#${uuidv4().slice(0, 6)}`;
+};
+
+console.log(getColor())
 
 // const connectUser = (username, usernameList) => {
 //     const usernameId = uuidv4();
@@ -40,17 +45,11 @@ const clientSizeCounter = (counter) => {
   return clientSize
 };
 
-
-
-
 wss.broadcast = function broadcast(data) {
-    wss.clients.forEach(function each(client) {
-        client.send(data)
-    })
+  wss.clients.forEach(function each(client) {
+    client.send(data)
+  })
 }
-
-
-// add broadcast for clientListNb count ??
 
 wss.on('connection', (ws) => {
 
@@ -63,10 +62,6 @@ wss.on('connection', (ws) => {
   ws.on('message', (messageObj) => {
 
     const parsedMsg = JSON.parse(messageObj);
-    // console.log('received message:', parsedMsg);
-    // parsedMsg.id = uuidv4();
-    // console.log('changing id', parsedMsg)
-    // wss.broadcast(JSON.stringify(parsedMsg))
 
     switch(parsedMsg.type) {
       case "postNotification":
@@ -83,17 +78,12 @@ wss.on('connection', (ws) => {
       default:
         console.error('Uh oh ... something went wrong!')
     }
-
   });
   
   ws.on('close', () => {
     console.log('Client disconnected');
     clientListNb.counter = wss.clients.size
-  
-  wss.broadcast(JSON.stringify(clientSizeCounter(clientListNb.counter)))
-
-}
-  );
-
-  
+    wss.broadcast(JSON.stringify(clientSizeCounter(clientListNb.counter)))
+  });
+ 
 });
