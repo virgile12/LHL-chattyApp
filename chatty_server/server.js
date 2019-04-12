@@ -12,6 +12,8 @@ const server = express()
 
 const wss = new SocketServer({ server });
 
+const clientListNb = {counter: 0};
+
 // const connectUser = (username, usernameList) => {
 //     const usernameId = uuidv4();
 
@@ -21,13 +23,25 @@ const wss = new SocketServer({ server });
 //     }
 // }
 
-// add client here -------------------------
+// // add client here -------------------------
 // const addClient = (client, clientInfo) => {
 //     clientList[clientInfo.id] = {
-//         id: 
+//       id: clientInfo.id,
+//       username: clientInfo.username,
 //     }
+//     client.id= cleintInfo.id
 // }
-// ---------------------------------
+
+const clientSizeCounter = (counter) => {
+  const clientSize =  {
+    type: 'clientCount',
+    numberOfClient: counter
+  }
+  return clientSize
+};
+
+
+
 
 wss.broadcast = function broadcast(data) {
     wss.clients.forEach(function each(client) {
@@ -35,9 +49,16 @@ wss.broadcast = function broadcast(data) {
     })
 }
 
+
+// add broadcast for clientListNb count ??
+
 wss.on('connection', (ws) => {
 
   console.log('Client connected');
+
+  clientListNb.counter = wss.clients.size
+  
+  wss.broadcast(JSON.stringify(clientSizeCounter(clientListNb.counter)))
 
   ws.on('message', (messageObj) => {
 
@@ -65,5 +86,14 @@ wss.on('connection', (ws) => {
 
   });
   
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () => {
+    console.log('Client disconnected');
+    clientListNb.counter = wss.clients.size
+  
+  wss.broadcast(JSON.stringify(clientSizeCounter(clientListNb.counter)))
+
+}
+  );
+
+  
 });
