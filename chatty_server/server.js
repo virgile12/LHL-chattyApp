@@ -42,10 +42,26 @@ wss.on('connection', (ws) => {
   ws.on('message', (messageObj) => {
 
     const parsedMsg = JSON.parse(messageObj);
-    console.log('received message:', parsedMsg);
-    parsedMsg.id = uuidv4();
-    console.log('changing id', parsedMsg)
-    wss.broadcast(JSON.stringify(parsedMsg))
+    // console.log('received message:', parsedMsg);
+    // parsedMsg.id = uuidv4();
+    // console.log('changing id', parsedMsg)
+    // wss.broadcast(JSON.stringify(parsedMsg))
+
+    switch(parsedMsg.type) {
+      case "postNotification":
+        parsedMsg.type = 'incomingNotification';
+        parsedMsg.id = uuidv4();
+        wss.broadcast(JSON.stringify(parsedMsg));
+        break;
+      case "postMessage":
+        parsedMsg.type = 'incomingMessage';
+        parsedMsg.id = uuidv4();
+        console.log('changing id', parsedMsg);
+        wss.broadcast(JSON.stringify(parsedMsg));
+        break;
+      default:
+        console.error('Uh oh ... something went wrong!')
+    }
 
   });
   
