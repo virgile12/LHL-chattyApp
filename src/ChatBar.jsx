@@ -29,18 +29,30 @@ class ChatBar extends Component {
     });
   }
 
-  onChangeUsername = (evt) => {
-      this.setState({
-          username: evt.target.value
-      })
+  
+  handleInsertUsername = (evt) => {
+    if (evt.key === 'Enter'){
+    console.log('Changing Username');
+        // this.setState({[evt.target.username]: evt.target.username,
+        //                [evt.target.content]: evt.target.content    
+        // })
+  this.props.onChangeUsername(this.state.username)
   }
-  // will need a new state in chatBar which will have its own content, username
-  // need state with default value and onChange event Handler.
+}
+
+onChangeUsername = (evt) => {
+  this.setState({
+      username : evt.target.value
+  });
+}
+
+// will need a new state in chatBar which will have its own content, username
+// need state with default value and onChange event Handler.
   // store inputs into state, capture with the If and then you send it over.. call the props, methods passdown
   render() {
     return (
       <footer className="chatbar">
-        <input className="chatbar-username" onChange={this.onChangeUsername} defaultValue={this.props.currentUser.name} placeholder={this.props.currentUser.name} />
+        <input className="chatbar-username" onChange={this.onChangeUsername} onKeyUp={this.handleInsertUsername}  placeholder={this.props.currentUser.name} />
         <input className="chatbar-message" onChange={this.onChangeMessage} onKeyUp={this.handleInsertMessage} placeholder="Type a message and hit ENTER" />
       </footer>
     );
