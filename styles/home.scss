@@ -13,7 +13,7 @@ body {
 }
 
 .chatbar {
-  background: tomato;
+  background: rgb(89, 162, 221);
   border-top: 1px solid black;
   bottom: 0;
   display: flex;
@@ -65,10 +65,11 @@ body {
 .message-username {
   flex: 2;
   font-weight: 700;
+  color:blue;
 }
 
 .navbar {
-  background: tomato;
+  background: rgb(89, 162, 221);
   border-bottom: 1px solid black;
   height: 60px;
   left: 0;
@@ -88,4 +89,12 @@ body {
   line-height: 60px;
   padding: 0 10px;
   text-decoration: none;
+}
+
+.client-counter {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1.5rem;
+  font-family: 'Open Sans', sans-serif;
+  font-style: oblique;
 }

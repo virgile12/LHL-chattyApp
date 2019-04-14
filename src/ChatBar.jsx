@@ -1,54 +1,40 @@
 import React, { Component } from 'react';
 
-
-// onClick
 class ChatBar extends Component {
-    state = {
-      username: this.props.currentUser.name,
-      content: ''
-    } 
-    
+  state = {
+    username: this.props.currentUser.name,
+    content: ''
+  } 
+
   handleInsertMessage = (evt) => {
-    if (evt.key === 'Enter'){
-        console.log('Submitting new Message ...');
-        // this.setState({[evt.target.username]: evt.target.username,
-        //                [evt.target.content]: evt.target.content    
-        // })
-        console.log(this.state)
-        this.props.handleInsertMessage(this.state.content, this.state.username)
-        
+    if (evt.key === 'Enter') {
+      console.log(this.state);
+      this.props.handleInsertMessage(this.state.content, this.state.username)
 
-        // Clears the input field
-        evt.target.value = '';
-
+      // Clears the input field
+      evt.target.value = '';
     }
   }
+
   onChangeMessage = (evt) => {
     this.setState({
-        content: evt.target.value
+      content: evt.target.value
+    });
+  }
+  
+  handleInsertUsername = (evt) => {
+    if (evt.key === 'Enter') {
+      console.log('Changing Username');
+      this.props.onChangeUsername(this.state.username)
+    }
+  }
+
+  onChangeUsername = (evt) => {
+    this.setState({
+      username : evt.target.value
     });
   }
 
-  
-  handleInsertUsername = (evt) => {
-    if (evt.key === 'Enter'){
-    console.log('Changing Username');
-        // this.setState({[evt.target.username]: evt.target.username,
-        //                [evt.target.content]: evt.target.content    
-        // })
-  this.props.onChangeUsername(this.state.username)
-  }
-}
-
-onChangeUsername = (evt) => {
-  this.setState({
-      username : evt.target.value
-  });
-}
-
-// will need a new state in chatBar which will have its own content, username
-// need state with default value and onChange event Handler.
-  // store inputs into state, capture with the If and then you send it over.. call the props, methods passdown
   render() {
     return (
       <footer className="chatbar">

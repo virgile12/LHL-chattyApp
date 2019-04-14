@@ -17,7 +17,6 @@ const getColor = () => {
   return `#${uuidv4().slice(0, 6)}`;
 };
 
-console.log(getColor())
 
 // const connectUser = (username, usernameList) => {
 //     const usernameId = uuidv4();
@@ -54,10 +53,14 @@ wss.broadcast = function broadcast(data) {
 wss.on('connection', (ws) => {
 
   console.log('Client connected');
-
   clientListNb.counter = wss.clients.size
   
   wss.broadcast(JSON.stringify(clientSizeCounter(clientListNb.counter)))
+
+  // when user sends msg, need to see specific color :
+  // 
+
+ 
 
   ws.on('message', (messageObj) => {
 
@@ -72,6 +75,7 @@ wss.on('connection', (ws) => {
       case "postMessage":
         parsedMsg.type = 'incomingMessage';
         parsedMsg.id = uuidv4();
+        parsedMsg.color = getColor();
         console.log('changing id', parsedMsg);
         wss.broadcast(JSON.stringify(parsedMsg));
         break;
