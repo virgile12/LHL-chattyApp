@@ -50,15 +50,32 @@ wss.broadcast = function broadcast(data) {
   })
 }
 
+const userColorAssignment = () => {
+  const colorStyle = {
+    type: 'colorInfo',
+    color: getColor()
+  }
+  return colorStyle
+}
+
+// wss.send = function send(colors) {
+//   wss.clients.forEach(function each(client) {
+//     client.send(colors)
+//   })
+// }
+
 wss.on('connection', (ws) => {
 
   console.log('Client connected');
   clientListNb.counter = wss.clients.size
   
   wss.broadcast(JSON.stringify(clientSizeCounter(clientListNb.counter)))
+ 
+  // const messageColor = { type: 'colorInfo', message: getColor()}
+  // ws.color = getColor()
+  ws.send(JSON.stringify(userColorAssignment()))
 
-  // when user sends msg, need to see specific color :
-  // 
+
 
  
 
@@ -70,19 +87,29 @@ wss.on('connection', (ws) => {
       case "postNotification":
         parsedMsg.type = 'incomingNotification';
         parsedMsg.id = uuidv4();
+        
+        ws.send(JSON.stringify(userColorAssignment()))
         wss.broadcast(JSON.stringify(parsedMsg));
         break;
       case "postMessage":
         parsedMsg.type = 'incomingMessage';
         parsedMsg.id = uuidv4();
-        parsedMsg.color = getColor();
         console.log('changing id', parsedMsg);
         wss.broadcast(JSON.stringify(parsedMsg));
+        
+        
         break;
+      // case "userColorChange":
+      //   parsedMsg.type = 'colorInfo';
+      //   ws.send(JSON.stringify(messageColor))
+      //   break;
+
       default:
         console.error('Uh oh ... something went wrong!')
     }
   });
+
+
   
   ws.on('close', () => {
     console.log('Client disconnected');
