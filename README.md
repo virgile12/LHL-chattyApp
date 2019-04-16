@@ -9,17 +9,17 @@ Welcome to ChattyApp. This project is a web chat Single Page application, based 
 
 ### Instructions
 
-Install all Dependencies and start the App
+* Install all Dependencies and start the App
 
-npm install
-npm start
+* npm install
+* npm start
 
 ### Setting Up the Server
 
-Access the chatty_server folder, install the dependencies and start the server:
-(in ./chatty_server)
-npm install
-npm start
+* Access the chatty_server folder, install the dependencies and start the server:
+* (in ./chatty_server)
+* npm install
+* npm start
 
 ### Dependencies
 
