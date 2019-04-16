@@ -6,27 +6,20 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      color: '',
       counter: 0,
       currentUser: {
-        name:'Bob'
-      }, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [
-        {
-          id: 0,
-          username: 'Bob',
-          content: 'Has anyone seen my marbles?',
-          type:'incomingMessage',
-          color: 'red'
-        },
-      ]
-    }
+        name:'Anonymous'
+      }, 
+      messages: [] // messages stored in this array
+    };
   }
 
-  handleOnOpen = evt => {
+  handleOnOpen = (evt) => {
     console.log('connected to websocket server');
   }
 
-  handleOnError = evt => {
+  handleOnError = (evt) => {
     console.log('Uh Oh ... something happened, please reconnect!');
   }
 
@@ -43,8 +36,6 @@ class App extends Component {
   // sending message from CLIENT to SERVER. Parsing the message to JSON type. Setting state for the parsedMsg + sorted with spread operator.
   handleOnMessage = message => {
 
-    console.log('receiving msg', message);
-
     const parsedReceivedMsg = JSON.parse(message.data);
 
       switch(parsedReceivedMsg.type) {
@@ -57,7 +48,11 @@ class App extends Component {
         break;
 
         case 'clientCount':
-        this.setState({counter: parsedReceivedMsg.numberOfClient})
+        this.setState({counter: parsedReceivedMsg.numberOfClient});
+        break;
+
+        case 'colorInfo':
+        this.setState({color: parsedReceivedMsg.color});
         break;
       }
   };
@@ -72,18 +67,27 @@ class App extends Component {
 
   // function  call when the messages are submitted. Create object  newMessage, strigify the newMessage obj to socketWeb server
   handleInsertMessage = (content) => {
-    const newMessage = {
-      id: this.state.messages.length + 1,
-      username: this.state.currentUser.name,
-      content: content,
-      type: 'postMessage',
-      color: this.state.messages.color
-    };
-    this.socket.send(JSON.stringify(newMessage))
-  }
+
+    if (this.state.currentUser.name !== content.username) {
+      const newMessage = {
+        id: this.state.messages.length + 1,
+        username: this.state.currentUser.name,
+        content: content,
+        type: 'postMessage',
+        color: this.state.color
+      };
+      this.socket.send(JSON.stringify(newMessage));
+    } else {
+      const newMessage = {
+        type: "postMessage", 
+        username: content.username, 
+        content: content.content };
+      this.socket.send(JSON.stringify(newMessage));
+    }
+  };
 
   onChangeUsername = username => {
-    console.log('changing username', username)
+
     const message = `${this.state.currentUser.name
       } changed name to ${username}`;
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Message from './Message.jsx';
 import Notification from './Notification.jsx';
-// must send color to message because of parent/children relation : app -> messageList -> message ( check in react devtool if u see message props)
+
 class MessageList extends Component {
   render() {
     let listMessages = this.props.messages.map((chattyData) => {
@@ -23,7 +23,6 @@ class MessageList extends Component {
       }
     })
 
-// change here to render new message from the chatBar, not chattyDefaultApp
     return (
       <main className="messages">
         {
@@ -33,4 +32,5 @@ class MessageList extends Component {
     );
   }
 }
+
 export default MessageList;
