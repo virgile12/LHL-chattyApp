@@ -4,7 +4,8 @@ Welcome to ChattyApp. This project is a web chat Single Page application, based 
 
 ## Screenshots
 
-
+!["chatty1"](https://github.com/virgile12/LHL-chattyApp/blob/master/docs/Chatty1.jpg)
+!["chatty2"](https://github.com/virgile12/LHL-chattyApp/blob/master/docs/Chatty2.jpg)
 
 ### Instructions
 
